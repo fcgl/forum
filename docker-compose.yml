@@ -1,0 +1,38 @@
+version: '3.7'
+services:
+  forum:
+    image: forum-service
+    ports:
+      - "8082:8082"
+    networks:
+      main:
+  db:
+    image: postgres:9.4
+    ports:
+      - "5432:5432"
+    volumes:
+      - type: volume
+        source: dbdata
+        target: "/var/lib/postgresql/data"
+    networks:
+      main:
+    environment:
+     - POSTGRES_PASSWORD=password
+  pgAdmin:
+    image: dpage/pgadmin4
+    ports:
+      - "9000:80"
+    networks: 
+      main:
+    volumes:
+      - type: volume
+        source: pgadmindata
+        target: "/var/lib/pgadmin"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=test@test.com
+      - PGADMIN_DEFAULT_PASSWORD=test
+volumes:
+  dbdata:
+  pgadmindata:
+networks: 
+  main:
