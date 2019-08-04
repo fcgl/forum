@@ -1,4 +1,5 @@
-package com.fcgl.madrid.healthcheck;
+package com.fcgl.madrid.healthcheck.controller;
+import com.fcgl.madrid.healthcheck.model.Health;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;

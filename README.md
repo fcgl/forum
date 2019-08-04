@@ -15,12 +15,23 @@
 This build should work for both macOS and Linux
 
 1. Download docker for your operating system
-2. From project root run the following commands:
-    * **Build:** `docker build -t forum-service .`
-    * **Run:** `docker run -d=true -p 8082:8082 forum-service`
+2. From project root run the following commands to build and run the app:
+    * `docker-compose up --build`
 
 ## Health Endpoint
 
 Confirm everything was ran correctly by going to the following endpoint: 
     * http://localhost:8082/health/v1/marco
+
+## Database
+
+#### PGAdmin
+You can access the DB through pgadmin
+
+1. Go to http://localhost:9000
+    * email: test@test.com
+    * password: test
+2. Credentials to connect to server:
+    * password: password
+    * user: postgres
 
