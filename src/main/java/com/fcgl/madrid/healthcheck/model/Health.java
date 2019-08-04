@@ -1,4 +1,4 @@
-package com.fcgl.madrid.healthcheck;
+package com.fcgl.madrid.healthcheck.model;
 
 /**
  * Health Object
@@ -12,7 +12,7 @@ public class Health {
      * @param statusCode Non-Http Code. Internal Status Code
      * @param message A message describing the Health of the system
      */
-    Health(int statusCode, String message) {
+    public Health(int statusCode, String message) {
         this.statusCode = statusCode;
         this.message = message;
     }
