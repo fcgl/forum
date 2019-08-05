@@ -17,12 +17,14 @@ public class Comment {
     private long updatedDate;
     private int likes;
     private int dislikes;
+    private int userId;
 
     @ManyToOne()
     @JsonBackReference
     private Post post;
 
-    public Comment(String message, Post post) {
+    public Comment(String message, Post post, int userId) {
+        this.userId = userId;
         this.message = message;
         this.post = post;
         this.createdDate = Instant.now().toEpochMilli();
@@ -89,5 +91,13 @@ public class Comment {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

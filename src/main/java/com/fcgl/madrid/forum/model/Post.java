@@ -22,6 +22,7 @@ public class Post {
     private int likes;
     private int dislikes;
     private int cityId;//TODO: Think about location better than this
+    private int userId;
 
     @OneToMany(mappedBy = "post")
     @JsonManagedReference
@@ -30,7 +31,8 @@ public class Post {
     public Post() {
     }
 
-    public Post(String title, String description, int cityId) {
+    public Post(String title, String description, int cityId, int userId) {
+        this.userId = userId;
         this.title = title;
         this.description = description;
         this.cityId = cityId;
@@ -111,5 +113,13 @@ public class Post {
 
     public void setComment(List<Comment> comment) {
         this.comment = comment;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }
