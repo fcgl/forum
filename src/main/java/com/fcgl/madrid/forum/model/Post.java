@@ -47,10 +47,6 @@ public class Post {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -69,10 +65,6 @@ public class Post {
 
     public long getCreatedDate() {
         return createdDate;
-    }
-
-    public void setCreatedDate(long createdDate) {
-        this.createdDate = createdDate;
     }
 
     public long getUpdatedDate() {
@@ -103,23 +95,11 @@ public class Post {
         return cityId;
     }
 
-    public void setCityId(int cityId) {
-        this.cityId = cityId;
-    }
-
-    public List<Comment> getComment() {
-        return comment;
-    }
-
-    public void setComment(List<Comment> comment) {
-        this.comment = comment;
-    }
-
     public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public List<Comment> getComment() {
+        return comment;
     }
 }

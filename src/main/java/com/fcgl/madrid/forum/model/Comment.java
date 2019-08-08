@@ -41,8 +41,8 @@ public class Comment {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public int getUserId() {
+        return userId;
     }
 
     public String getMessage() {
@@ -53,20 +53,12 @@ public class Comment {
         this.message = message;
     }
 
-    public long getCreatedDate() {
-        return createdDate;
+    public int getDislikes() {
+        return dislikes;
     }
 
-    public void setCreatedDate(long createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public long getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(long updatedDate) {
-        this.updatedDate = updatedDate;
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
     }
 
     public int getLikes() {
@@ -77,27 +69,19 @@ public class Comment {
         this.likes = likes;
     }
 
-    public int getDislikes() {
-        return dislikes;
+    public long getUpdatedDate() {
+        return updatedDate;
     }
 
-    public void setDislikes(int dislikes) {
-        this.dislikes = dislikes;
+    public void setUpdatedDate(long updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public long getCreatedDate() {
+        return createdDate;
     }
 
     public Post getPost() {
         return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 }
