@@ -1,4 +1,4 @@
-package com.fcgl.madrid.forum.model;
+package com.fcgl.madrid.forum.dataModel;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 

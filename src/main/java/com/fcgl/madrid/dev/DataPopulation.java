@@ -1,7 +1,7 @@
 package com.fcgl.madrid.dev;
 
-import com.fcgl.madrid.forum.model.Comment;
-import com.fcgl.madrid.forum.model.Post;
+import com.fcgl.madrid.forum.dataModel.Comment;
+import com.fcgl.madrid.forum.dataModel.Post;
 import com.fcgl.madrid.forum.repository.CommentRepository;
 import com.fcgl.madrid.forum.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;

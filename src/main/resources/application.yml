@@ -25,3 +25,19 @@ ribbon:
   eureka:
     enabled: true
 
+
+#Resilience4j config: Have to run some tests to figure out best config
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      ringBufferSizeInClosedState: 10
+      ringBufferSizeInHalfOpenState: 3
+      waitDurationInOpenState: 2s
+      failureRateThreshold: 30
+      eventConsumerBufferSize: 10
+#      ignoreExceptions:
+  instances:
+    backendA:
+      baseConfig: default
+

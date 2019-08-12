@@ -1,6 +1,6 @@
 package com.fcgl.madrid.forum.controller;
 
-import com.fcgl.madrid.forum.model.Post;
+import com.fcgl.madrid.forum.dataModel.Post;
 import com.fcgl.madrid.forum.service.PostService;
 import com.fcgl.madrid.healthcheck.model.Health;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/forum/post/v1")
 public class PostController {
 
-    PostService postService;
+    private PostService postService;
 
     @Autowired
     public void setPostService(PostService postService) {
