@@ -35,3 +35,36 @@ You can access the DB through pgadmin
     * password: password
     * user: postgres
 
+## Patterns
+
+**TODO: Move these to a wiki**
+
+#### Circuit Breaker Pattern
+
+The `Circuit Breaker Pattern` helps us in preventing a cascade of failures when 
+a remote service is down.
+
+After a number of failed attempts, we can consider that the service is unavailable/overloaded
+and eagerly reject all subsequent requests to it. In this way, we can save system
+resources for calls which are likely to fail. 
+
+##### Resilience4j Circuit Breaker
+The circuitBreaker is implemented via a finite state machine with three normal states:
+CLOSED, OPEN, and HALF_OPEN and two special states DISABLED and FORCED_OPEN.
+
+The state of the CircuitBreaker changes from CLOSED to OPEN when the failure rate is above a 
+configurable threshold. Then all calls are rejected for a configurable time diration. 
+
+After the time duration has elapsed, the CircuitBreaker state changes from OPEN to HALF_OPEN and
+allows a configurable number of calls to see if the backend is still unavailable or has become available again. 
+
+
+More information can be found here: https://resilience4j.readme.io/docs/circuitbreaker
+Resilience4j demo: https://github.com/resilience4j/resilience4j-spring-boot2-demo
+
+#### Bulkhead Pattern
+
+The goal of the bulkhead pattern is to avoid faults in one part of a system to tae the entire
+system down. The term comes from ships where a ship is divided in separate watertight
+compartments to avoid a single hull breach to flood the entire ship; it will only
+flood one bulkhead.

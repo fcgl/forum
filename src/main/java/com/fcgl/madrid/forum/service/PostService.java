@@ -1,6 +1,6 @@
 package com.fcgl.madrid.forum.service;
 
-import com.fcgl.madrid.forum.model.Post;
+import com.fcgl.madrid.forum.dataModel.Post;
 import com.fcgl.madrid.forum.repository.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
