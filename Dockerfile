@@ -12,7 +12,7 @@ RUN mvn -B dependency:resolve dependency:resolve-plugins
 #Copy source code
 COPY src /build/src
 # Build application
-RUN mvn package -DskipTests
+RUN mvn package
 
 FROM openjdk:8-slim as runtime
 # Expose the port
