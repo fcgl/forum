@@ -1,5 +1,6 @@
 package com.fcgl.madrid.dev;
 import com.fcgl.madrid.forum.model.InternalStatus;
+import com.fcgl.madrid.forum.model.StatusCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -25,13 +26,13 @@ public class DevService {
 
     private ResponseEntity<InternalStatus> fallback(IllegalArgumentException ex) {
         String message = "Fallback: " + ex.getMessage();
-        InternalStatus internalStatus = new InternalStatus(-1, 400, message);
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 400, message);
         return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<InternalStatus> fallback(CallNotPermittedException ex) {
         String message = "Fallback: " + ex.getMessage();
-        InternalStatus internalStatus = new InternalStatus(-1, 500, message);
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
         return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
