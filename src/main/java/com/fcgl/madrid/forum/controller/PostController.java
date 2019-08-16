@@ -1,9 +1,13 @@
 package com.fcgl.madrid.forum.controller;
 
 import com.fcgl.madrid.forum.dataModel.Post;
+import com.fcgl.madrid.forum.model.InternalStatus;
+import com.fcgl.madrid.forum.model.PostRequest;
 import com.fcgl.madrid.forum.service.PostService;
 import com.fcgl.madrid.healthcheck.model.Health;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +40,10 @@ public class PostController {
     @RequestMapping("/test")
     public Health checkHealth() {
         return new Health(1, "testing forum");
+    }
+
+    @PostMapping(path= "/post")
+    public ResponseEntity<InternalStatus> post(PostRequest postRequest) {
+        return postService.post(postRequest);
     }
 }

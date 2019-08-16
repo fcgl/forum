@@ -3,6 +3,8 @@ package com.fcgl.madrid.forum.dataModel;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import java.time.Instant;
 import java.util.List;
@@ -15,14 +17,18 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotNull
+    @Size(min = 3, max = 40)
     private String title;
     private String description;
     private long createdDate;
     private long updatedDate;
-    private int likes;
-    private int dislikes;
-    private int cityId;//TODO: Think about location better than this
-    private int userId;
+    private Integer likes;
+    private Integer dislikes;
+    @NotNull
+    private Integer cityId;//TODO: Think about location better than this
+    @NotNull
+    private Integer userId;
 
     @OneToMany(mappedBy = "post")
     @JsonManagedReference
@@ -31,13 +37,13 @@ public class Post {
     public Post() {
     }
 
-    public Post(String title, String description, int cityId, int userId) {
+    public Post(String title, String description, Integer cityId, Integer userId) {
         this.userId = userId;
         this.title = title;
         this.description = description;
         this.cityId = cityId;
-        this.likes = 0;
-        this.dislikes = 0;
+        this.likes = new Integer(0);
+        this.dislikes = new Integer(0);
         this.createdDate = Instant.now().toEpochMilli();
         this.updatedDate = this.createdDate;
         this.comment = new ArrayList<Comment>();
@@ -75,27 +81,27 @@ public class Post {
         this.updatedDate = updatedDate;
     }
 
-    public int getLikes() {
+    public Integer getLikes() {
         return likes;
     }
 
-    public void setLikes(int likes) {
+    public void setLikes(Integer likes) {
         this.likes = likes;
     }
 
-    public int getDislikes() {
+    public Integer getDislikes() {
         return dislikes;
     }
 
-    public void setDislikes(int dislikes) {
+    public void setDislikes(Integer dislikes) {
         this.dislikes = dislikes;
     }
 
-    public int getCityId() {
+    public Integer getCityId() {
         return cityId;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
