@@ -17,13 +17,13 @@ public class Comment {
     private long updatedDate;
     private int likes;
     private int dislikes;
-    private int userId;
+    private Integer userId;
 
     @ManyToOne()
     @JsonBackReference
     private Post post;
 
-    public Comment(String message, Post post, int userId) {
+    public Comment(String message, Post post, Integer userId) {
         this.userId = userId;
         this.message = message;
         this.post = post;
@@ -41,7 +41,7 @@ public class Comment {
         return id;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
