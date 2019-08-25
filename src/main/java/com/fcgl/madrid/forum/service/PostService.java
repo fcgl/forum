@@ -26,6 +26,8 @@ import java.lang.StringBuilder;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
+import static com.fcgl.madrid.forum.service.CommentService.getInternalStatusResponseEntity;
+
 @Service
 public class PostService implements IPostService {
 
@@ -63,23 +65,7 @@ public class PostService implements IPostService {
      * @return
      */
     private ResponseEntity<InternalStatus> handleParamException(TransactionSystemException e) {
-        Throwable cause = ((TransactionSystemException) e).getRootCause();
-        if (cause instanceof ConstraintViolationException) {
-            Set<ConstraintViolation<?>> constraintViolations = ((ConstraintViolationException) cause).getConstraintViolations();
-            List<String> messages = new ArrayList<String>();
-            for (ConstraintViolation v : constraintViolations) {
-                StringBuilder builder = new StringBuilder("");
-                builder.append(v.getPropertyPath().toString());
-                builder.append(" ");
-                builder.append(v.getMessage());
-                messages.add(builder.toString());
-            }
-            // do something here
-            InternalStatus internalStatus = new InternalStatus(StatusCode.PARAM, 400, messages);
-            return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.BAD_REQUEST);
-        }
-        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, e.getMessage());
-        return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+        return getInternalStatusResponseEntity(e);
     }
 
     /**
