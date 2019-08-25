@@ -56,7 +56,11 @@ public class CommentService implements ICommentService {
      * @return
      */
     private ResponseEntity<InternalStatus> handleParamException(TransactionSystemException e) {
-        Throwable cause = ((TransactionSystemException) e).getRootCause();
+        return getInternalStatusResponseEntity(e);
+    }
+
+    static ResponseEntity<InternalStatus> getInternalStatusResponseEntity(TransactionSystemException e) {
+        Throwable cause = e.getRootCause();
         if (cause instanceof ConstraintViolationException) {
             Set<ConstraintViolation<?>> constraintViolations = ((ConstraintViolationException) cause).getConstraintViolations();
             List<String> messages = new ArrayList<String>();
@@ -74,6 +78,7 @@ public class CommentService implements ICommentService {
         InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, e.getMessage());
         return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     /**
      *
      * @param ex Exception

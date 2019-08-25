@@ -3,6 +3,7 @@ package com.fcgl.madrid.forum.dataModel;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import java.time.Instant;
 
@@ -12,15 +13,19 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotNull
     private String message;
     private long createdDate;
     private long updatedDate;
     private int likes;
     private int dislikes;
+    @NotNull
     private Integer userId;
 
     @ManyToOne()
     @JsonBackReference
+    @NotNull
+    @JoinColumn(name = "postId")
     private Post post;
 
     public Comment(String message, Post post, Integer userId) {
