@@ -1,9 +1,10 @@
-package com.fcgl.madrid.forum.model;
+package com.fcgl.madrid.forum.model.response;
 
 public class StatusCode {
     public static final StatusCode UNKNOWN = new StatusCode(-1);
     public static final StatusCode OK = new StatusCode(1);
     public static final StatusCode PARAM = new StatusCode(2);
+    public static final StatusCode NOT_FOUND = new StatusCode(3);
 
     private int code;
 

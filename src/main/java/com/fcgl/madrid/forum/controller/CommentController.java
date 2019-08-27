@@ -1,7 +1,7 @@
 package com.fcgl.madrid.forum.controller;
 
-import com.fcgl.madrid.forum.model.CommentRequest;
-import com.fcgl.madrid.forum.model.InternalStatus;
+import com.fcgl.madrid.forum.model.request.CommentRequest;
+import com.fcgl.madrid.forum.model.response.InternalStatus;
 import com.fcgl.madrid.forum.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

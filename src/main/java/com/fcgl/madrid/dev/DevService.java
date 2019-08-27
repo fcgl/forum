@@ -1,9 +1,8 @@
 package com.fcgl.madrid.dev;
-import com.fcgl.madrid.forum.model.InternalStatus;
-import com.fcgl.madrid.forum.model.StatusCode;
+import com.fcgl.madrid.forum.model.response.InternalStatus;
+import com.fcgl.madrid.forum.model.response.StatusCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;

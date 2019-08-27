@@ -1,11 +1,9 @@
 package com.fcgl.madrid.forum.service;
 
 import com.fcgl.madrid.forum.dataModel.Comment;
-import com.fcgl.madrid.forum.dataModel.Post;
-import com.fcgl.madrid.forum.model.CommentRequest;
-import com.fcgl.madrid.forum.model.InternalStatus;
-import com.fcgl.madrid.forum.model.PostRequest;
-import com.fcgl.madrid.forum.model.StatusCode;
+import com.fcgl.madrid.forum.model.request.CommentRequest;
+import com.fcgl.madrid.forum.model.response.InternalStatus;
+import com.fcgl.madrid.forum.model.response.StatusCode;
 import com.fcgl.madrid.forum.repository.CommentRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;

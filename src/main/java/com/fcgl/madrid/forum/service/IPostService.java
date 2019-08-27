@@ -1,7 +1,7 @@
 package com.fcgl.madrid.forum.service;
 
-import com.fcgl.madrid.forum.model.InternalStatus;
-import com.fcgl.madrid.forum.model.PostRequest;
+import com.fcgl.madrid.forum.model.response.InternalStatus;
+import com.fcgl.madrid.forum.model.request.PostRequest;
 import org.springframework.http.ResponseEntity;
 
 public interface IPostService {
