@@ -33,7 +33,15 @@ public class DataPopulation {
         postRepository.save(post1);
         postRepository.save(post2);
         postRepository.save(post3);
-        Comment comment1 = new Comment("Testing Comment for post 1", post1, 1);
+        Comment comment1 = new Comment("Testing Comment #1 for post 1", post1, 1);
+        Comment comment2 = new Comment("Testing Comment #2 for post 1", post1, 2);
+        Comment comment3 = new Comment("Testing Comment #3 for post 1", post1, 5);
+        Comment comment4 = new Comment("Testing Comment #4 for post 1", post1, 3);
+        Comment comment5 = new Comment("Testing Comment #5 for post 1", post1, 4);
         commentRepository.save(comment1);
+        commentRepository.save(comment2);
+        commentRepository.save(comment3);
+        commentRepository.save(comment4);
+        commentRepository.save(comment5);
     }
 }
