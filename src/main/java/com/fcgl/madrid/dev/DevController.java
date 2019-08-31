@@ -1,6 +1,6 @@
 package com.fcgl.madrid.dev;
 
-import com.fcgl.madrid.forum.model.InternalStatus;
+import com.fcgl.madrid.forum.model.response.InternalStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

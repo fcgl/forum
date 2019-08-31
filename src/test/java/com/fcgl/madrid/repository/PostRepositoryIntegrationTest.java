@@ -1,8 +1,8 @@
 package com.fcgl.madrid.repository;
 
 import com.fcgl.madrid.MadridApplication;
-import com.fcgl.madrid.forum.model.InternalStatus;
-import com.fcgl.madrid.forum.model.PostRequest;
+import com.fcgl.madrid.forum.model.response.InternalStatus;
+import com.fcgl.madrid.forum.model.request.PostRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.BeforeClass;

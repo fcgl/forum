@@ -1,10 +1,12 @@
-package com.fcgl.madrid.forum.model;
+package com.fcgl.madrid.forum.model.response;
+
 import java.util.List;
 import java.util.ArrayList;
 
 public class InternalStatus {
     public static final InternalStatus OK = new InternalStatus(StatusCode.OK, 200, "ok");
     public static final InternalStatus MISSING_PARAM = new InternalStatus(StatusCode.PARAM, 400, "Missing Required Param");
+    public static final InternalStatus NOT_FOUND = new InternalStatus(StatusCode.NOT_FOUND, 404, "Data Not Found");
 
     private int code;
     private int httpCode;

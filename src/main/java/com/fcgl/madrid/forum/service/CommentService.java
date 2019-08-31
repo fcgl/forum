@@ -1,14 +1,16 @@
 package com.fcgl.madrid.forum.service;
 
 import com.fcgl.madrid.forum.dataModel.Comment;
-import com.fcgl.madrid.forum.dataModel.Post;
-import com.fcgl.madrid.forum.model.CommentRequest;
-import com.fcgl.madrid.forum.model.InternalStatus;
-import com.fcgl.madrid.forum.model.PostRequest;
-import com.fcgl.madrid.forum.model.StatusCode;
+import com.fcgl.madrid.forum.model.request.CommentRequest;
+import com.fcgl.madrid.forum.model.request.GetPostCommentRequest;
+import com.fcgl.madrid.forum.model.response.GetPostCommentResponse;
+import com.fcgl.madrid.forum.model.response.InternalStatus;
+import com.fcgl.madrid.forum.model.response.StatusCode;
 import com.fcgl.madrid.forum.repository.CommentRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -50,6 +52,14 @@ public class CommentService implements ICommentService {
         }
     }
 
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
+    public ResponseEntity<GetPostCommentResponse> getPostComments(GetPostCommentRequest request) {
+        Pageable pageConfig = PageRequest.of(request.getPage(), request.getSize());
+        List<Comment> comments = commentRepository.findAllByPostId(request.getPostId(), pageConfig);
+        GetPostCommentResponse response = new GetPostCommentResponse(InternalStatus.OK, comments);
+        return new ResponseEntity<GetPostCommentResponse>(response, HttpStatus.OK);
+    }
+
     /**
      * Handles Exceptions dealing with parameters
      * @param e TransactionSystemException
@@ -84,9 +94,21 @@ public class CommentService implements ICommentService {
      * @param ex Exception
      * @return ResponseEntity<InternalStatus>
      */
-    private ResponseEntity<InternalStatus> fallback(Exception ex) {
+    private ResponseEntity<InternalStatus> fallback(CommentRequest commentRequest, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
         InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
         return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     *
+     * @param ex Exception
+     * @return ResponseEntity<InternalStatus>
+     */
+    private ResponseEntity<GetPostCommentResponse> fallback(GetPostCommentRequest request, Exception ex) {
+        String message = "Fallback: " + ex.getMessage();
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        GetPostCommentResponse response = new GetPostCommentResponse(internalStatus, null);
+        return new ResponseEntity<GetPostCommentResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

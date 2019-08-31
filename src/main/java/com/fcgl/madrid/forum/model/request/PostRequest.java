@@ -1,4 +1,4 @@
-package com.fcgl.madrid.forum.model;
+package com.fcgl.madrid.forum.model.request;
 
 public class PostRequest {
 

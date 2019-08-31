@@ -1,9 +1,11 @@
 package com.fcgl.madrid.forum.service;
 
 import com.fcgl.madrid.forum.dataModel.Post;
-import com.fcgl.madrid.forum.model.InternalStatus;
-import com.fcgl.madrid.forum.model.PostRequest;
-import com.fcgl.madrid.forum.model.StatusCode;
+import com.fcgl.madrid.forum.dataModel.IBasicPost;
+import com.fcgl.madrid.forum.model.response.GetPostResponse;
+import com.fcgl.madrid.forum.model.response.InternalStatus;
+import com.fcgl.madrid.forum.model.request.PostRequest;
+import com.fcgl.madrid.forum.model.response.StatusCode;
 import com.fcgl.madrid.forum.repository.PostRepository;
 
 import org.springframework.http.HttpStatus;
@@ -16,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 
 import java.lang.Exception;
 import java.lang.Throwable;
@@ -59,6 +59,17 @@ public class PostService implements IPostService {
         }
     }
 
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
+    public ResponseEntity<GetPostResponse> getPost(Long postId) {
+        IBasicPost post = postRepository.getPost(postId);
+        if (post == null) {
+            GetPostResponse postResponse = new GetPostResponse(InternalStatus.NOT_FOUND, null);
+            return new ResponseEntity<GetPostResponse>(postResponse, HttpStatus.NOT_FOUND);
+        }
+        GetPostResponse postResponse = new GetPostResponse(InternalStatus.OK, post);
+        return new ResponseEntity<GetPostResponse>(postResponse, HttpStatus.OK);
+    }
+
     /**
      * Handles Exceptions dealing with parameters
      * @param e TransactionSystemException
@@ -73,10 +84,22 @@ public class PostService implements IPostService {
      * @param ex Exception
      * @return ResponseEntity<InternalStatus>
      */
-    private ResponseEntity<InternalStatus> fallback(Exception ex) {
+    private ResponseEntity<InternalStatus> fallback(PostRequest postRequest, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
         InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
         return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     *
+     * @param ex Exception
+     * @return ResponseEntity<InternalStatus>
+     */
+    private ResponseEntity<GetPostResponse> fallback(Long postId, Exception ex) {
+        String message = "Fallback: " + ex.getMessage();
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        GetPostResponse postResponse = new GetPostResponse(internalStatus, null);
+        return new ResponseEntity<GetPostResponse>(postResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
