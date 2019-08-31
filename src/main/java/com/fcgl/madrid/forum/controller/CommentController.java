@@ -27,8 +27,8 @@ public class CommentController {
         return commentService.postComment(commentRequest);
     }
 
-    @GetMapping(path = "/postComment")
-    public ResponseEntity<GetPostCommentResponse> postComment(GetPostCommentRequest request) {
+    @GetMapping(path = "/getComment")
+    public ResponseEntity<GetPostCommentResponse> getPostComments(GetPostCommentRequest request) {
         return commentService.getPostComments(request);
     }
 

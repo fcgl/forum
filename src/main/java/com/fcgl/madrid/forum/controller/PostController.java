@@ -49,7 +49,7 @@ public class PostController {
         return postService.post(postRequest);
     }
 
-    @GetMapping(path="/post")
+    @GetMapping(path="/getPost")
     public ResponseEntity<GetPostResponse> getPost(Long postId) {
         return postService.getPost(postId);
     }
