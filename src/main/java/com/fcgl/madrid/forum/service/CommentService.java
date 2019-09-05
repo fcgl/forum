@@ -1,14 +1,19 @@
 package com.fcgl.madrid.forum.service;
 
 import com.fcgl.madrid.forum.dataModel.Comment;
+import com.fcgl.madrid.forum.dataModel.Post;
 import com.fcgl.madrid.forum.model.request.CommentRequest;
 import com.fcgl.madrid.forum.model.request.GetPostCommentRequest;
 import com.fcgl.madrid.forum.model.response.GetPostCommentResponse;
 import com.fcgl.madrid.forum.model.response.InternalStatus;
 import com.fcgl.madrid.forum.model.response.StatusCode;
 import com.fcgl.madrid.forum.repository.CommentRepository;
+import com.fcgl.madrid.forum.repository.PostRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -26,10 +31,14 @@ import java.util.Set;
 public class CommentService implements ICommentService {
 
     private CommentRepository commentRepository;
+    private PostRepository postRepository;
+    private Log logger;
 
     @Autowired
-    public CommentService(CommentRepository commentRepository) {
+    public CommentService(CommentRepository commentRepository, PostRepository postRepository) {
         this.commentRepository = commentRepository;
+        this.postRepository = postRepository;
+        this.logger = LogFactory.getLog(CommentService.class);
     }
 
     public List<Comment> getAll() {
@@ -45,13 +54,35 @@ public class CommentService implements ICommentService {
                     commentRequest.getUserId()
             );
             commentRepository.save(comment);
-            return new ResponseEntity<InternalStatus>(InternalStatus.OK, HttpStatus.OK);
         }
         catch (TransactionSystemException e) {
             return handleParamException(e);
         }
+
+        boolean success = updatePostCommentCount(commentRequest.getPost(), new Integer(1));
+        if (!success) {
+            logger.warn(new String("UPDATE POST COMMENT COUNT FAILED FOR POST: " + Long.toString(commentRequest.getPost().getId())));
+        }
+        return new ResponseEntity<InternalStatus>(InternalStatus.OK, HttpStatus.OK);
     }
 
+    /**
+     * Adds a count to the number of comments. Follows the "eventually consistent strategy".
+     * If this function throws and exception it wont stop the request that calls this function
+     * @param post
+     * @param count
+     * @return
+     */
+    private boolean updatePostCommentCount(Post post, Integer count) {
+        try {
+            post.setCommentSize(post.getCommentSize() + count);
+            postRepository.save(post);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
     @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
     public ResponseEntity<GetPostCommentResponse> getPostComments(GetPostCommentRequest request) {
         Pageable pageConfig = PageRequest.of(request.getPage(), request.getSize());

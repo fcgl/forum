@@ -22,7 +22,7 @@ public class Comment {
     @NotNull
     private Integer userId;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     @NotNull
     @JoinColumn(name = "postId")

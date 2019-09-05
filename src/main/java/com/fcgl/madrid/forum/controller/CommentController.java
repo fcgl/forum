@@ -31,6 +31,4 @@ public class CommentController {
     public ResponseEntity<GetPostCommentResponse> getPostComments(GetPostCommentRequest request) {
         return commentService.getPostComments(request);
     }
-
-
 }

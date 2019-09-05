@@ -2,7 +2,12 @@ package com.fcgl.madrid.forum.dataModel;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -30,9 +35,10 @@ public class Post {
     @NotNull
     private Integer userId;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Comment> comment;
+    private Integer commentSize;
 
     public Post() {
     }
@@ -47,6 +53,7 @@ public class Post {
         this.createdDate = Instant.now().toEpochMilli();
         this.updatedDate = this.createdDate;
         this.comment = new ArrayList<Comment>();
+        this.commentSize = new Integer(0);//Optimized so that POST reads are faster
     }
 
     public Long getId() {
@@ -107,5 +114,13 @@ public class Post {
 
     public List<Comment> getComment() {
         return comment;
+    }
+
+    public Integer getCommentSize() {
+        return commentSize;
+    }
+
+    public void setCommentSize(Integer commentSize) {
+        this.commentSize = commentSize;
     }
 }

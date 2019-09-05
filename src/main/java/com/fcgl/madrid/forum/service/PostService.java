@@ -2,12 +2,16 @@ package com.fcgl.madrid.forum.service;
 
 import com.fcgl.madrid.forum.dataModel.Post;
 import com.fcgl.madrid.forum.dataModel.IBasicPost;
+import com.fcgl.madrid.forum.model.request.GetCityPostsRequest;
 import com.fcgl.madrid.forum.model.response.GetPostResponse;
+import com.fcgl.madrid.forum.model.response.GetCityPostsResponse;
 import com.fcgl.madrid.forum.model.response.InternalStatus;
 import com.fcgl.madrid.forum.model.request.PostRequest;
 import com.fcgl.madrid.forum.model.response.StatusCode;
 import com.fcgl.madrid.forum.repository.PostRepository;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -70,6 +74,14 @@ public class PostService implements IPostService {
         return new ResponseEntity<GetPostResponse>(postResponse, HttpStatus.OK);
     }
 
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
+    public ResponseEntity<GetCityPostsResponse> getCityPosts(GetCityPostsRequest request) {
+        Pageable pageConfig = PageRequest.of(request.getPage(), request.getSize());
+        List<IBasicPost> posts = postRepository.findAllByCityId(request.getCityId(), pageConfig);
+        GetCityPostsResponse response = new GetCityPostsResponse(InternalStatus.OK, posts);
+        return new ResponseEntity<GetCityPostsResponse>(response, HttpStatus.OK);
+    }
+
     /**
      * Handles Exceptions dealing with parameters
      * @param e TransactionSystemException
@@ -102,4 +114,15 @@ public class PostService implements IPostService {
         return new ResponseEntity<GetPostResponse>(postResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     *
+     * @param ex Exception
+     * @return ResponseEntity<InternalStatus>
+     */
+    private ResponseEntity<GetCityPostsResponse> fallback(GetCityPostsRequest request, Exception ex) {
+        String message = "Fallback: " + ex.getMessage();
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        GetCityPostsResponse postResponse = new GetCityPostsResponse(internalStatus, null);
+        return new ResponseEntity<GetCityPostsResponse>(postResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
