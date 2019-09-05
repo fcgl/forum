@@ -14,5 +14,6 @@ public interface IBasicPost {
     Integer getDislikes();
     Integer getCityId();
     Integer getUserId();
+    Integer getCommentSize();
 
 }

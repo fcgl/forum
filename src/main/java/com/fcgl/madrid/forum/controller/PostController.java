@@ -1,6 +1,8 @@
 package com.fcgl.madrid.forum.controller;
 
 import com.fcgl.madrid.forum.dataModel.Post;
+import com.fcgl.madrid.forum.model.request.GetCityPostsRequest;
+import com.fcgl.madrid.forum.model.response.GetCityPostsResponse;
 import com.fcgl.madrid.forum.model.response.GetPostResponse;
 import com.fcgl.madrid.forum.model.response.InternalStatus;
 import com.fcgl.madrid.forum.model.request.PostRequest;
@@ -53,5 +55,11 @@ public class PostController {
     public ResponseEntity<GetPostResponse> getPost(Long postId) {
         return postService.getPost(postId);
     }
+
+    @GetMapping(path="/cityPosts")
+    public ResponseEntity<GetCityPostsResponse> getCityPosts(GetCityPostsRequest request) {
+        return postService.getCityPosts(request);
+    }
+
 
 }
