@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserLikeRepository extends JpaRepository<UserLike, Long>  {
 
     UserLike findUserLikeByUserIdAndPost(Long userId, Post post);
+
+    Integer countByPostId(Long postId);
 }

@@ -5,11 +5,9 @@ import com.fcgl.madrid.forum.dataModel.IBasicPost;
 import com.fcgl.madrid.forum.dataModel.UserLike;
 import com.fcgl.madrid.forum.model.request.GetCityPostsRequest;
 import com.fcgl.madrid.forum.model.request.PostLikeRequest;
-import com.fcgl.madrid.forum.model.response.GetPostResponse;
-import com.fcgl.madrid.forum.model.response.GetCityPostsResponse;
-import com.fcgl.madrid.forum.model.response.InternalStatus;
+import com.fcgl.madrid.forum.model.response.*;
 import com.fcgl.madrid.forum.model.request.PostRequest;
-import com.fcgl.madrid.forum.model.response.StatusCode;
+import com.fcgl.madrid.forum.repository.CommentRepository;
 import com.fcgl.madrid.forum.repository.PostRepository;
 
 import com.fcgl.madrid.forum.repository.UserLikeRepository;
@@ -43,13 +41,15 @@ public class PostService implements IPostService {
 
     private PostRepository postRepository;
     private UserLikeRepository userLikeRepository;
+    private CommentRepository commentRepository;
     private Log logger;
 
 
     @Autowired
-    public PostService(PostRepository postRepository, UserLikeRepository userLikeRepository) {
+    public PostService(PostRepository postRepository, UserLikeRepository userLikeRepository, CommentRepository commentRepository) {
         this.postRepository = postRepository;
         this.userLikeRepository = userLikeRepository;
+        this.commentRepository = commentRepository;
         this.logger = LogFactory.getLog(PostService.class);
 
     }
@@ -111,6 +111,28 @@ public class PostService implements IPostService {
         return new ResponseEntity<InternalStatus>(InternalStatus.OK, HttpStatus.OK);
     }
 
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallbackTwo")
+    public ResponseEntity<GetPostInteractionData> getPostLikeCount(Long postId) {
+        Integer likeCount = userLikeRepository.countByPostId(postId);
+        GetPostInteractionData interactionData = new GetPostInteractionData(likeCount, null, InternalStatus.OK);
+        return new ResponseEntity<GetPostInteractionData>(interactionData, HttpStatus.OK);
+    }
+
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallbackTwo")
+    public ResponseEntity<GetPostInteractionData> getPostCommentCount(Long postId) {
+        Integer commentCount = commentRepository.countByPostId(postId);
+        GetPostInteractionData interactionData = new GetPostInteractionData(null, commentCount, InternalStatus.OK);
+        return new ResponseEntity<GetPostInteractionData>(interactionData, HttpStatus.OK);
+    }
+
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallbackTwo")
+    public ResponseEntity<GetPostInteractionData> getPostInteractionData(Long postId) {
+        Integer commentCount = commentRepository.countByPostId(postId);
+        Integer likeCount = userLikeRepository.countByPostId(postId);
+        GetPostInteractionData interactionData = new GetPostInteractionData(likeCount, commentCount, InternalStatus.OK);
+        return new ResponseEntity<GetPostInteractionData>(interactionData, HttpStatus.OK);
+    }
+
     /**
      * Handles Exceptions dealing with parameters
      * @param e TransactionSystemException
@@ -164,5 +186,17 @@ public class PostService implements IPostService {
         String message = "Fallback: " + ex.getMessage();
         InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
         return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     *
+     * @param ex Exception
+     * @return ResponseEntity<GetCityPostsResponse>
+     */
+    private ResponseEntity<GetPostInteractionData> fallbackTwo(Long postId, Exception ex) {
+        String message = "Fallback: " + ex.getMessage();
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        GetPostInteractionData postResponse = new GetPostInteractionData(null, null, internalStatus);
+        return new ResponseEntity<GetPostInteractionData>(postResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
