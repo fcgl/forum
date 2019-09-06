@@ -2,6 +2,7 @@ package com.fcgl.madrid.forum.controller;
 
 import com.fcgl.madrid.forum.dataModel.Post;
 import com.fcgl.madrid.forum.model.request.GetCityPostsRequest;
+import com.fcgl.madrid.forum.model.request.PostLikeRequest;
 import com.fcgl.madrid.forum.model.response.GetCityPostsResponse;
 import com.fcgl.madrid.forum.model.response.GetPostResponse;
 import com.fcgl.madrid.forum.model.response.InternalStatus;
@@ -61,5 +62,9 @@ public class PostController {
         return postService.getCityPosts(request);
     }
 
+    @PostMapping(path="/like")
+    public ResponseEntity<InternalStatus> postLike(PostLikeRequest request) {
+        return postService.postLike(request);
+    }
 
 }
