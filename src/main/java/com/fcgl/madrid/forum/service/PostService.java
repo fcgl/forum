@@ -2,7 +2,9 @@ package com.fcgl.madrid.forum.service;
 
 import com.fcgl.madrid.forum.dataModel.Post;
 import com.fcgl.madrid.forum.dataModel.IBasicPost;
+import com.fcgl.madrid.forum.dataModel.UserLike;
 import com.fcgl.madrid.forum.model.request.GetCityPostsRequest;
+import com.fcgl.madrid.forum.model.request.PostLikeRequest;
 import com.fcgl.madrid.forum.model.response.GetPostResponse;
 import com.fcgl.madrid.forum.model.response.GetCityPostsResponse;
 import com.fcgl.madrid.forum.model.response.InternalStatus;
@@ -10,6 +12,9 @@ import com.fcgl.madrid.forum.model.request.PostRequest;
 import com.fcgl.madrid.forum.model.response.StatusCode;
 import com.fcgl.madrid.forum.repository.PostRepository;
 
+import com.fcgl.madrid.forum.repository.UserLikeRepository;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,6 +26,7 @@ import org.springframework.transaction.TransactionSystemException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.Optional;
 
 
 import java.lang.Exception;
@@ -36,10 +42,16 @@ import static com.fcgl.madrid.forum.service.CommentService.getInternalStatusResp
 public class PostService implements IPostService {
 
     private PostRepository postRepository;
+    private UserLikeRepository userLikeRepository;
+    private Log logger;
+
 
     @Autowired
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, UserLikeRepository userLikeRepository) {
         this.postRepository = postRepository;
+        this.userLikeRepository = userLikeRepository;
+        this.logger = LogFactory.getLog(PostService.class);
+
     }
 
     public List<Post> getAll() {
@@ -82,6 +94,23 @@ public class PostService implements IPostService {
         return new ResponseEntity<GetCityPostsResponse>(response, HttpStatus.OK);
     }
 
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
+    public ResponseEntity<InternalStatus> postLike(PostLikeRequest request) {
+        Optional<Post> postOptional = postRepository.findById(request.getPostId());
+        if (!postOptional.isPresent()) {
+           return new ResponseEntity<InternalStatus>(InternalStatus.NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+        Post post = postOptional.get();
+        UserLike userLike = userLikeRepository.findUserLikeByUserIdAndPost(request.getUserId(), post);
+        if (userLike == null) {
+            UserLike newUserLike = new UserLike(request.getUserId(), post);
+            userLikeRepository.save(newUserLike);
+        } else {
+            userLikeRepository.delete(userLike);
+        }
+        return new ResponseEntity<InternalStatus>(InternalStatus.OK, HttpStatus.OK);
+    }
+
     /**
      * Handles Exceptions dealing with parameters
      * @param e TransactionSystemException
@@ -105,7 +134,7 @@ public class PostService implements IPostService {
     /**
      *
      * @param ex Exception
-     * @return ResponseEntity<InternalStatus>
+     * @return ResponseEntity<GetPostResponse>
      */
     private ResponseEntity<GetPostResponse> fallback(Long postId, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
@@ -117,12 +146,23 @@ public class PostService implements IPostService {
     /**
      *
      * @param ex Exception
-     * @return ResponseEntity<InternalStatus>
+     * @return ResponseEntity<GetCityPostsResponse>
      */
     private ResponseEntity<GetCityPostsResponse> fallback(GetCityPostsRequest request, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
         InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
         GetCityPostsResponse postResponse = new GetCityPostsResponse(internalStatus, null);
         return new ResponseEntity<GetCityPostsResponse>(postResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     *
+     * @param ex Exception
+     * @return ResponseEntity<GetCityPostsResponse>
+     */
+    private ResponseEntity<InternalStatus> fallback(PostLikeRequest request, Exception ex) {
+        String message = "Fallback: " + ex.getMessage();
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

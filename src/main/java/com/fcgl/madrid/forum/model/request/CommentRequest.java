@@ -4,7 +4,7 @@ import com.fcgl.madrid.forum.dataModel.Post;
 
 public class CommentRequest {
     private String message;
-    private Integer userId;
+    private Long userId;
     private Post post;
 
     /**
@@ -13,17 +13,17 @@ public class CommentRequest {
      * @param userId
      * @param post
      */
-    public CommentRequest(String message, Integer userId, Post post){
+    public CommentRequest(String message, Long userId, Post post){
         this.message = message;
         this.userId = userId;
         this.post = post;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

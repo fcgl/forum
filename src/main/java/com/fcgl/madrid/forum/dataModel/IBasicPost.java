@@ -13,7 +13,7 @@ public interface IBasicPost {
     Integer getLikes();
     Integer getDislikes();
     Integer getCityId();
-    Integer getUserId();
+    Long getUserId();
     Integer getCommentSize();
 
 }

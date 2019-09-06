@@ -20,7 +20,7 @@ public class Comment {
     private int likes;
     private int dislikes;
     @NotNull
-    private Integer userId;
+    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
@@ -28,7 +28,7 @@ public class Comment {
     @JoinColumn(name = "postId")
     private Post post;
 
-    public Comment(String message, Post post, Integer userId) {
+    public Comment(String message, Post post, Long userId) {
         this.userId = userId;
         this.message = message;
         this.post = post;
@@ -46,7 +46,7 @@ public class Comment {
         return id;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 

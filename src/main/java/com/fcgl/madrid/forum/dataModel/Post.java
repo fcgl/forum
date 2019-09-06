@@ -1,20 +1,17 @@
 package com.fcgl.madrid.forum.dataModel;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.OneToMany;
-import javax.persistence.FetchType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.ArrayList;
-
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Post {
@@ -33,17 +30,21 @@ public class Post {
     @NotNull
     private Integer cityId;//TODO: Think about location better than this
     @NotNull
-    private Integer userId;
+    private Long userId;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Comment> comment;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<UserLike> userLikes;
     private Integer commentSize;
 
     public Post() {
     }
 
-    public Post(String title, String description, Integer cityId, Integer userId) {
+    public Post(String title, String description, Integer cityId, Long userId) {
         this.userId = userId;
         this.title = title;
         this.description = description;
@@ -54,6 +55,7 @@ public class Post {
         this.updatedDate = this.createdDate;
         this.comment = new ArrayList<Comment>();
         this.commentSize = new Integer(0);//Optimized so that POST reads are faster
+        this.userLikes = new ArrayList<UserLike>();
     }
 
     public Long getId() {
@@ -108,7 +110,7 @@ public class Post {
         return cityId;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -122,5 +124,13 @@ public class Post {
 
     public void setCommentSize(Integer commentSize) {
         this.commentSize = commentSize;
+    }
+
+    public List<UserLike> getUserLikes() {
+        return userLikes;
+    }
+
+    public void setUserLikes(List<UserLike> userLikes) {
+        this.userLikes = userLikes;
     }
 }
