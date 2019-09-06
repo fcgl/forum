@@ -25,8 +25,6 @@ public class Post {
     private String description;
     private long createdDate;
     private long updatedDate;
-    private Integer likes;
-    private Integer dislikes;
     @NotNull
     private Integer cityId;//TODO: Think about location better than this
     @NotNull
@@ -39,7 +37,6 @@ public class Post {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<UserLike> userLikes;
-    private Integer commentSize;
 
     public Post() {
     }
@@ -49,12 +46,9 @@ public class Post {
         this.title = title;
         this.description = description;
         this.cityId = cityId;
-        this.likes = new Integer(0);
-        this.dislikes = new Integer(0);
         this.createdDate = Instant.now().toEpochMilli();
         this.updatedDate = this.createdDate;
         this.comment = new ArrayList<Comment>();
-        this.commentSize = new Integer(0);//Optimized so that POST reads are faster
         this.userLikes = new ArrayList<UserLike>();
     }
 
@@ -90,22 +84,6 @@ public class Post {
         this.updatedDate = updatedDate;
     }
 
-    public Integer getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Integer likes) {
-        this.likes = likes;
-    }
-
-    public Integer getDislikes() {
-        return dislikes;
-    }
-
-    public void setDislikes(Integer dislikes) {
-        this.dislikes = dislikes;
-    }
-
     public Integer getCityId() {
         return cityId;
     }
@@ -116,14 +94,6 @@ public class Post {
 
     public List<Comment> getComment() {
         return comment;
-    }
-
-    public Integer getCommentSize() {
-        return commentSize;
-    }
-
-    public void setCommentSize(Integer commentSize) {
-        this.commentSize = commentSize;
     }
 
     public List<UserLike> getUserLikes() {

@@ -10,10 +10,7 @@ public interface IBasicPost {
     String getDescription();
     long getCreatedDate();
     long getUpdatedDate();
-    Integer getLikes();
-    Integer getDislikes();
     Integer getCityId();
     Long getUserId();
-    Integer getCommentSize();
 
 }
