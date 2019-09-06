@@ -4,6 +4,7 @@ import com.fcgl.madrid.forum.dataModel.Post;
 import com.fcgl.madrid.forum.model.request.GetCityPostsRequest;
 import com.fcgl.madrid.forum.model.request.PostLikeRequest;
 import com.fcgl.madrid.forum.model.response.GetCityPostsResponse;
+import com.fcgl.madrid.forum.model.response.GetPostInteractionData;
 import com.fcgl.madrid.forum.model.response.GetPostResponse;
 import com.fcgl.madrid.forum.model.response.InternalStatus;
 import com.fcgl.madrid.forum.model.request.PostRequest;
@@ -67,4 +68,18 @@ public class PostController {
         return postService.postLike(request);
     }
 
+    @GetMapping(path="/postLikeCount")
+    public ResponseEntity<GetPostInteractionData> getPostLikeCount(Long postId) {
+        return postService.getPostLikeCount(postId);
+    }
+
+    @GetMapping(path="/postCommentCount")
+    public ResponseEntity<GetPostInteractionData> getPostCommentCount(Long postId) {
+        return postService.getPostCommentCount(postId);
+    }
+
+    @GetMapping(path="/postInteractionData")
+    public ResponseEntity<GetPostInteractionData> getPostInteractionData(Long postId) {
+        return postService.getPostInteractionData(postId);
+    }
 }

@@ -59,30 +59,9 @@ public class CommentService implements ICommentService {
             return handleParamException(e);
         }
 
-        boolean success = updatePostCommentCount(commentRequest.getPost(), new Integer(1));
-        if (!success) {
-            logger.warn(new String("UPDATE POST COMMENT COUNT FAILED FOR POST: " + Long.toString(commentRequest.getPost().getId())));
-        }
         return new ResponseEntity<InternalStatus>(InternalStatus.OK, HttpStatus.OK);
     }
 
-    /**
-     * Adds a count to the number of comments. Follows the "eventually consistent strategy".
-     * If this function throws and exception it wont stop the request that calls this function
-     * @param post
-     * @param count
-     * @return
-     */
-    private boolean updatePostCommentCount(Post post, Integer count) {
-        try {
-            post.setCommentSize(post.getCommentSize() + count);
-            postRepository.save(post);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-
-    }
     @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
     public ResponseEntity<GetPostCommentResponse> getPostComments(GetPostCommentRequest request) {
         Pageable pageConfig = PageRequest.of(request.getPage(), request.getSize());
