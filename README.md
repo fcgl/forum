@@ -18,6 +18,39 @@ This build should work for both macOS and Linux
 2. From project root run the following commands to build and run the app:
     * `docker-compose up --build`
 
+## API
+
+In order to make API requests you will need a JWT token. You can get a token by building and running the user-interaction
+repo: https://github.com/fcgl/user-interaction making the following POST request: 
+
+* endpoint: `http://localhost:8080/auth/login`
+* body: `{"email": "test@fcgl.com", "password": "password"}`
+with content type: `application/json`
+
+You will get back a token that you will have to add to your header before making any request. We recommend downloading 
+Postman to make API requests: https://www.getpostman.com/downloads/
+
+Example Curl Request:
+```
+curl -X GET \
+  http://localhost:8082/forum/post/v1/all \
+  -H 'Accept: */*' \
+  -H 'Accept-Encoding: gzip, deflate' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiZXhwIjoxNTY5MDQ2MzU1LCJpYXQiOjE1NjgxODIzNTUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.15gI6MJaRQvtczvSnQ_FHhadcXmVJiTr_EklPSK8ECK3go5DnmL02GUIjYF72XTEmsdjbPO2L8WSOoPxmxiylA' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Host: localhost:8082' \
+  -H 'Postman-Token: b36a1b1b-0915-4fca-aebf-421267b4a905,b2ac6b88-4ad5-4c4d-8f51-c0a01993d9c4' \
+  -H 'User-Agent: PostmanRuntime/7.16.3' \
+  -H 'cache-control: no-cache'
+```
+
+**The following token will be available until 6/7/2022 (June 7, 2022):**
+
+```
+eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiZXhwIjoxNjU0NTgzMDcyLCJpYXQiOjE1NjgxODMwNzIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdfQ.Tly-cqQSVziwdLwEzg8Pswv6OVINahoS0d9yhQnC30DLWf7UZGzbgdm4naTYgNkNNBgY00Dx2jkh-r4eYDtyIg
+```
+
 ## Health Endpoint
 
 Confirm everything was ran correctly by going to the following endpoint: 
