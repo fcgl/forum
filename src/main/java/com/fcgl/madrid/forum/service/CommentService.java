@@ -92,10 +92,10 @@ public class CommentService implements ICommentService {
                 messages.add(builder.toString());
             }
             // do something here
-            InternalStatus internalStatus = new InternalStatus(StatusCode.PARAM, 400, messages);
+            InternalStatus internalStatus = new InternalStatus(StatusCode.PARAM, HttpStatus.BAD_REQUEST, messages);
             return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.BAD_REQUEST);
         }
-        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, e.getMessage());
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -106,7 +106,7 @@ public class CommentService implements ICommentService {
      */
     private ResponseEntity<InternalStatus> fallback(CommentRequest commentRequest, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
-        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, HttpStatus.INTERNAL_SERVER_ERROR, message);
         return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -117,7 +117,7 @@ public class CommentService implements ICommentService {
      */
     private ResponseEntity<GetPostCommentResponse> fallback(GetPostCommentRequest request, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
-        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, HttpStatus.INTERNAL_SERVER_ERROR, message);
         GetPostCommentResponse response = new GetPostCommentResponse(internalStatus, null);
         return new ResponseEntity<GetPostCommentResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }

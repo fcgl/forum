@@ -18,5 +18,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT u FROM Post u WHERE u.id = ?1")
     IBasicPost getPost(Long id);
 
-    List<IBasicPost> findAllByCityId(Integer cityId, Pageable pageable);
+    List<IBasicPost> findAllByCityIdOrderByCreatedDateDesc(Integer cityId, Pageable pageable);
 }

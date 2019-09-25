@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserLikeRepository extends JpaRepository<UserLike, Long>  {
 
-    UserLike findUserLikeByUserIdAndPost(Long userId, Post post);
+    UserLike findUserLikeByUserIdAndPostId(Long userId, Long postId);
 
     Integer countByPostId(Long postId);
 }

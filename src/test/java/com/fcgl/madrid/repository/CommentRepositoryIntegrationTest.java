@@ -24,7 +24,7 @@ public class CommentRepositoryIntegrationTest {
 
     @Test
     public void findByIdTest() {
-        Post post1 = new Post("Looking for unit tests", "Anyone see any units tests in Madrid?", 1, new Long(1));
+        Post post1 = new Post("Looking for unit tests", "Anyone see any units tests in Madrid?", 1, new Long(1), "Jean Paul");
         entityManager.persist(post1);
         entityManager.flush();
         Long postId = post1.getId();
