@@ -7,10 +7,9 @@ import com.fcgl.madrid.forum.model.response.InternalStatus;
 import com.fcgl.madrid.forum.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/forum/comment/v1")
@@ -23,12 +22,12 @@ public class CommentController {
     }
 
     @PostMapping(path = "/postComment")
-    public ResponseEntity<InternalStatus> postComment(CommentRequest commentRequest) {
+    public ResponseEntity<InternalStatus> postComment(@Valid @RequestBody CommentRequest commentRequest) {
         return commentService.postComment(commentRequest);
     }
 
     @GetMapping(path = "/getComment")
-    public ResponseEntity<GetPostCommentResponse> getPostComments(GetPostCommentRequest request) {
+    public ResponseEntity<GetPostCommentResponse> getPostComments(@Valid GetPostCommentRequest request) {
         return commentService.getPostComments(request);
     }
 }

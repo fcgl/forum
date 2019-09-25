@@ -28,7 +28,7 @@ public class CommentRepositoryIntegrationTest {
         entityManager.persist(post1);
         entityManager.flush();
         Long postId = post1.getId();
-        Comment comment1 = new Comment("I found a unit test", post1, new Long(20));
+        Comment comment1 = new Comment("I found a unit test", post1, new Long(20), "Max");
         entityManager.persist(comment1);
         entityManager.flush();
         Long commentId = comment1.getId();

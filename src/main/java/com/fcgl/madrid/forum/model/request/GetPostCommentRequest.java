@@ -1,12 +1,17 @@
 package com.fcgl.madrid.forum.model.request;
 
+import javax.validation.constraints.NotNull;
+
 public class GetPostCommentRequest {
 
+    @NotNull
     private Long postId;
-    private int page;
-    private int size;
+    @NotNull
+    private Integer page;
+    @NotNull
+    private Integer size;
 
-    public GetPostCommentRequest(Long postId, int page, int size) {
+    public GetPostCommentRequest(Long postId, Integer page, Integer size) {
         this.postId = postId;
         this.page = page;
         this.size = size;
@@ -20,19 +25,19 @@ public class GetPostCommentRequest {
         this.postId = postId;
     }
 
-    public int getPage() {
+    public Integer getPage() {
         return page;
     }
 
-    public void setPage(int page) {
+    public void setPage(Integer page) {
         this.page = page;
     }
 
-    public int getSize() {
+    public Integer getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(Integer size) {
         this.size = size;
     }
 }
