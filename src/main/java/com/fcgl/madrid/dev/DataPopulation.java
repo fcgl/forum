@@ -37,11 +37,11 @@ public class DataPopulation {
         postRepository.save(post1);
         postRepository.save(post2);
         postRepository.save(post3);
-        Comment comment1 = new Comment("Testing Comment #1 for post 1", post1, new Long(1));
-        Comment comment2 = new Comment("Testing Comment #2 for post 1", post1, new Long(2));
-        Comment comment3 = new Comment("Testing Comment #3 for post 1", post1, new Long(5));
-        Comment comment4 = new Comment("Testing Comment #4 for post 1", post1, new Long(3));
-        Comment comment5 = new Comment("Testing Comment #5 for post 1", post1, new Long(4));
+        Comment comment1 = new Comment("Testing Comment #1 for post 1", post1, new Long(1), "Jean Paul");
+        Comment comment2 = new Comment("Testing Comment #2 for post 1", post1, new Long(2), "Miles");
+        Comment comment3 = new Comment("Testing Comment #3 for post 1", post1, new Long(5), "Ben");
+        Comment comment4 = new Comment("Testing Comment #4 for post 1", post1, new Long(3), "Nat");
+        Comment comment5 = new Comment("Testing Comment #5 for post 1", post1, new Long(4), "Peter");
         commentRepository.save(comment1);
         commentRepository.save(comment2);
         commentRepository.save(comment3);

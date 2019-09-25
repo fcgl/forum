@@ -21,6 +21,7 @@ public class Comment {
     private int dislikes;
     @NotNull
     private Long userId;
+    private String firstName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
@@ -28,7 +29,11 @@ public class Comment {
     @JoinColumn(name = "postId")
     private Post post;
 
-    public Comment(String message, Post post, Long userId) {
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedDate = Instant.now().toEpochMilli();
+    }
+    public Comment(String message, Post post, Long userId, String firstName) {
         this.userId = userId;
         this.message = message;
         this.post = post;
@@ -36,6 +41,7 @@ public class Comment {
         this.updatedDate = this.createdDate;
         this.likes = 0;
         this.dislikes = 0;
+        this.firstName = firstName;
     }
 
     public Comment() {
@@ -88,5 +94,13 @@ public class Comment {
 
     public Post getPost() {
         return post;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 }

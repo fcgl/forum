@@ -51,7 +51,8 @@ public class CommentService implements ICommentService {
             Comment comment = new Comment(
                     commentRequest.getMessage(),
                     commentRequest.getPost(),
-                    commentRequest.getUserId()
+                    commentRequest.getUserId(),
+                    commentRequest.getFirstname()
             );
             commentRepository.save(comment);
         }
