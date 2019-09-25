@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionSystemException;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -65,7 +66,8 @@ public class PostService implements IPostService {
                     postRequest.getTitle(),
                     postRequest.getDescription(),
                     postRequest.getCityId(),
-                    postRequest.getUserId()
+                    postRequest.getUserId(),
+                    postRequest.getUserFirstName()
             );
             postRepository.save(post);
             return new ResponseEntity<InternalStatus>(InternalStatus.OK, HttpStatus.OK);
@@ -89,9 +91,32 @@ public class PostService implements IPostService {
     @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
     public ResponseEntity<GetCityPostsResponse> getCityPosts(GetCityPostsRequest request) {
         Pageable pageConfig = PageRequest.of(request.getPage(), request.getSize());
-        List<IBasicPost> posts = postRepository.findAllByCityId(request.getCityId(), pageConfig);
-        GetCityPostsResponse response = new GetCityPostsResponse(InternalStatus.OK, posts);
+        List<IBasicPost> posts = postRepository.findAllByCityIdOrderByCreatedDateDesc(request.getCityId(), pageConfig);
+        List<UserLikePost> userLikePosts = updatePostAttribute(posts, request.getUserId());
+        GetCityPostsResponse response = new GetCityPostsResponse(InternalStatus.OK, userLikePosts);
         return new ResponseEntity<GetCityPostsResponse>(response, HttpStatus.OK);
+    }
+
+    private List<UserLikePost> updatePostAttribute(List<IBasicPost> posts, Long userId) {
+        long oneMinuteAgo = Instant.now().toEpochMilli() - 60000;
+        List<UserLikePost> userLikePosts = new ArrayList<>();
+        for (IBasicPost iBasicPost : posts) {
+            UserLikePost userLikePost = new UserLikePost(iBasicPost, false);
+            if (iBasicPost.getUpdatedDate() <= oneMinuteAgo) {
+                long postId = iBasicPost.getId();
+                Post post = postRepository.findById(postId).get();
+                int likeCount = userLikeRepository.countByPostId(postId);
+                int commentCount = commentRepository.countByPostId(postId);
+                post.setUserLikeCount(likeCount);
+                post.setUserCommentCount(commentCount);
+                postRepository.save(post);
+            }
+            if (userLikeRepository.findUserLikeByUserIdAndPostId(userId, iBasicPost.getId()) != null) {
+                userLikePost.setLiked(true);
+            }
+            userLikePosts.add(userLikePost);
+        }
+        return userLikePosts;
     }
 
     @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
@@ -101,7 +126,7 @@ public class PostService implements IPostService {
            return new ResponseEntity<InternalStatus>(InternalStatus.NOT_FOUND, HttpStatus.NOT_FOUND);
         }
         Post post = postOptional.get();
-        UserLike userLike = userLikeRepository.findUserLikeByUserIdAndPost(request.getUserId(), post);
+        UserLike userLike = userLikeRepository.findUserLikeByUserIdAndPostId(request.getUserId(), request.getPostId());
         if (userLike == null) {
             UserLike newUserLike = new UserLike(request.getUserId(), post);
             userLikeRepository.save(newUserLike);
@@ -149,7 +174,7 @@ public class PostService implements IPostService {
      */
     private ResponseEntity<InternalStatus> fallback(PostRequest postRequest, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
-        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, HttpStatus.INTERNAL_SERVER_ERROR, message);
         return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -160,7 +185,7 @@ public class PostService implements IPostService {
      */
     private ResponseEntity<GetPostResponse> fallback(Long postId, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
-        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, HttpStatus.INTERNAL_SERVER_ERROR, message);
         GetPostResponse postResponse = new GetPostResponse(internalStatus, null);
         return new ResponseEntity<GetPostResponse>(postResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -172,7 +197,7 @@ public class PostService implements IPostService {
      */
     private ResponseEntity<GetCityPostsResponse> fallback(GetCityPostsRequest request, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
-        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, HttpStatus.INTERNAL_SERVER_ERROR, message);
         GetCityPostsResponse postResponse = new GetCityPostsResponse(internalStatus, null);
         return new ResponseEntity<GetCityPostsResponse>(postResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -184,7 +209,7 @@ public class PostService implements IPostService {
      */
     private ResponseEntity<InternalStatus> fallback(PostLikeRequest request, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
-        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, HttpStatus.INTERNAL_SERVER_ERROR, message);
         return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -195,7 +220,7 @@ public class PostService implements IPostService {
      */
     private ResponseEntity<GetPostInteractionData> fallbackTwo(Long postId, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
-        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, HttpStatus.INTERNAL_SERVER_ERROR, message);
         GetPostInteractionData postResponse = new GetPostInteractionData(null, null, internalStatus);
         return new ResponseEntity<GetPostInteractionData>(postResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -12,11 +12,10 @@ import com.fcgl.madrid.forum.service.PostService;
 import com.fcgl.madrid.healthcheck.model.Health;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+//import org.springframework.security.core.context.SecurityContextHolder;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -59,12 +58,12 @@ public class PostController {
     }
 
     @GetMapping(path="/cityPosts")
-    public ResponseEntity<GetCityPostsResponse> getCityPosts(GetCityPostsRequest request) {
+    public ResponseEntity<GetCityPostsResponse> getCityPosts(@Valid GetCityPostsRequest request) {
         return postService.getCityPosts(request);
     }
 
     @PostMapping(path="/like")
-    public ResponseEntity<InternalStatus> postLike(PostLikeRequest request) {
+    public ResponseEntity<InternalStatus> postLike(@Valid @RequestBody PostLikeRequest request) {
         return postService.postLike(request);
     }
 

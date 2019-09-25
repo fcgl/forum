@@ -6,6 +6,7 @@ public class PostRequest {
     private String description;
     private Integer cityId;
     private Long userId;
+    private String userFirstName;
 
     /**
      * Request Parameters for post
@@ -14,11 +15,12 @@ public class PostRequest {
      * @param cityId
      * @param userId
      */
-    public PostRequest(String title, String description, Integer cityId, Long userId) {
+    public PostRequest(String title, String description, Integer cityId, Long userId, String userFirstName) {
         this.cityId = cityId;
         this.title = title;
         this.description = description;
         this.userId = userId;
+        this.userFirstName = userFirstName;
     }
 
     public String getDescription() {
@@ -51,5 +53,13 @@ public class PostRequest {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getUserFirstName() {
+        return userFirstName;
+    }
+
+    public void setUserFirstName(String userFirstName) {
+        this.userFirstName = userFirstName;
     }
 }

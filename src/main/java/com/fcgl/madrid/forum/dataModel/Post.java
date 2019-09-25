@@ -13,6 +13,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Post table
+ * params userLikeCount and userCommentCount follow the eventually consistent pattern.
+ * Will be updated when a user requests the data and it's been over 1 minute since the last update
+ */
 @Entity
 public class Post {
 
@@ -29,6 +34,9 @@ public class Post {
     private Integer cityId;//TODO: Think about location better than this
     @NotNull
     private Long userId;
+    private Integer userLikeCount;
+    private Integer userCommentCount;
+    private String userFirstName;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     @JsonManagedReference
@@ -38,18 +46,26 @@ public class Post {
     @JsonManagedReference
     private List<UserLike> userLikes;
 
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedDate = Instant.now().toEpochMilli();
+    }
+
     public Post() {
     }
 
-    public Post(String title, String description, Integer cityId, Long userId) {
+    public Post(String title, String description, Integer cityId, Long userId, String userFirstName) {
         this.userId = userId;
         this.title = title;
         this.description = description;
         this.cityId = cityId;
+        this.userFirstName = userFirstName;
         this.createdDate = Instant.now().toEpochMilli();
         this.updatedDate = this.createdDate;
         this.comment = new ArrayList<Comment>();
         this.userLikes = new ArrayList<UserLike>();
+        this.userLikeCount = 0;
+        this.userCommentCount = 0;
     }
 
     public Long getId() {
@@ -102,5 +118,29 @@ public class Post {
 
     public void setUserLikes(List<UserLike> userLikes) {
         this.userLikes = userLikes;
+    }
+
+    public Integer getUserLikeCount() {
+        return userLikeCount;
+    }
+
+    public void setUserLikeCount(Integer userLikeCount) {
+        this.userLikeCount = userLikeCount;
+    }
+
+    public Integer getUserCommentCount() {
+        return userCommentCount;
+    }
+
+    public void setUserCommentCount(Integer userCommentCount) {
+        this.userCommentCount = userCommentCount;
+    }
+
+    public String getUserFirstName() {
+        return userFirstName;
+    }
+
+    public void setUserFirstName(String userFirstName) {
+        this.userFirstName = userFirstName;
     }
 }

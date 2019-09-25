@@ -25,13 +25,13 @@ public class DevService {
 
     private ResponseEntity<InternalStatus> fallback(IllegalArgumentException ex) {
         String message = "Fallback: " + ex.getMessage();
-        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 400, message);
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, HttpStatus.BAD_REQUEST, message);
         return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<InternalStatus> fallback(CallNotPermittedException ex) {
         String message = "Fallback: " + ex.getMessage();
-        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, 500, message);
+        InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, HttpStatus.INTERNAL_SERVER_ERROR, message);
         return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

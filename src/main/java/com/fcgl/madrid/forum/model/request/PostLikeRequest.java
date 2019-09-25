@@ -1,8 +1,12 @@
 package com.fcgl.madrid.forum.model.request;
 
+import javax.validation.constraints.NotNull;
+
 public class PostLikeRequest {
 
+    @NotNull
     private Long userId;
+    @NotNull
     private Long postId;
 
     public PostLikeRequest(Long userId, Long postId) {
@@ -24,5 +28,13 @@ public class PostLikeRequest {
 
     public void setPostId(Long postId) {
         this.postId = postId;
+    }
+
+    @Override
+    public String toString() {
+        return "PostLikeRequest{" +
+                "userId=" + userId +
+                ", postId=" + postId +
+                '}';
     }
 }

@@ -12,5 +12,7 @@ public interface IBasicPost {
     long getUpdatedDate();
     Integer getCityId();
     Long getUserId();
-
+    Integer getUserLikeCount();
+    Integer getUserCommentCount();
+    String getUserFirstName();
 }

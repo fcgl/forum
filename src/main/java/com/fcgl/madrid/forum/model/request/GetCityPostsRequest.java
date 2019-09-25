@@ -1,16 +1,25 @@
 package com.fcgl.madrid.forum.model.request;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 public class GetCityPostsRequest {
 
+    @NotNull
     private Integer cityId;
-    private int page;
-    private int size;
+    @NotNull
+    private Integer page;
+    @NotNull
+    private Integer size;
+
+    private Long userId;
 
 
-    public GetCityPostsRequest(Integer cityId, int page, int size) {
+    public GetCityPostsRequest(Integer cityId, Integer page, Integer size, Long userId) {
         this.cityId = cityId;
         this.page = page;
         this.size = size;
+        this.userId = userId;
     }
 
     public Integer getCityId() {
@@ -21,19 +30,27 @@ public class GetCityPostsRequest {
         this.cityId = cityId;
     }
 
-    public int getPage() {
+    public Integer getPage() {
         return page;
     }
 
-    public void setPage(int page) {
+    public void setPage(Integer page) {
         this.page = page;
     }
 
-    public int getSize() {
+    public Integer getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(Integer size) {
         this.size = size;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
