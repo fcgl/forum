@@ -48,7 +48,7 @@ public class PostController {
     }
 
     @PostMapping(path= "/post")
-    public ResponseEntity<InternalStatus> post(PostRequest postRequest) {
+    public ResponseEntity<InternalStatus> post(@Valid @RequestBody PostRequest postRequest) {
         return postService.post(postRequest);
     }
 
@@ -57,9 +57,19 @@ public class PostController {
         return postService.getPost(postId);
     }
 
-    @GetMapping(path="/cityPosts")
-    public ResponseEntity<GetCityPostsResponse> getCityPosts(@Valid GetCityPostsRequest request) {
-        return postService.getCityPosts(request);
+    @GetMapping(path="/cityPosts/new")
+    public ResponseEntity<GetCityPostsResponse> getCityPostsNew(@Valid GetCityPostsRequest request) {
+        return postService.getCityPostsNew(request);
+    }
+
+    @GetMapping(path="/cityPosts/featured")
+    public ResponseEntity<GetCityPostsResponse> getCityPostsFeatured(@Valid GetCityPostsRequest request) {
+        return postService.getCityPostsFeatured(request);
+    }
+
+    @GetMapping(path="/cityPosts/top")
+    public ResponseEntity<GetCityPostsResponse> getCityPostsTop(@Valid GetCityPostsRequest request) {
+        return postService.getCityPostsTop(request);
     }
 
     @PostMapping(path="/like")

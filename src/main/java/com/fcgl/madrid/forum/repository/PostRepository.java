@@ -19,4 +19,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     IBasicPost getPost(Long id);
 
     List<IBasicPost> findAllByCityIdOrderByCreatedDateDesc(Integer cityId, Pageable pageable);
+
+    List<IBasicPost> findAllByCityIdOrderByFeaturedPopularityDesc(Integer cityId, Pageable pageable);
+
+    List<IBasicPost> findAllByCityIdOrderByTopPopularityDesc(Integer cityId, Pageable pageable);
 }

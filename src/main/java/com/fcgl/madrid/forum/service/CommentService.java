@@ -48,9 +48,10 @@ public class CommentService implements ICommentService {
     @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
     public ResponseEntity<InternalStatus> postComment(CommentRequest commentRequest) {
         try {
+            Post post = postRepository.findById(commentRequest.getPostId()).get();
             Comment comment = new Comment(
                     commentRequest.getMessage(),
-                    commentRequest.getPost(),
+                    post,
                     commentRequest.getUserId(),
                     commentRequest.getFirstname()
             );
