@@ -89,9 +89,27 @@ public class PostService implements IPostService {
     }
 
     @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
-    public ResponseEntity<GetCityPostsResponse> getCityPosts(GetCityPostsRequest request) {
+    public ResponseEntity<GetCityPostsResponse> getCityPostsNew(GetCityPostsRequest request) {
         Pageable pageConfig = PageRequest.of(request.getPage(), request.getSize());
         List<IBasicPost> posts = postRepository.findAllByCityIdOrderByCreatedDateDesc(request.getCityId(), pageConfig);
+        List<UserLikePost> userLikePosts = updatePostAttribute(posts, request.getUserId());
+        GetCityPostsResponse response = new GetCityPostsResponse(InternalStatus.OK, userLikePosts);
+        return new ResponseEntity<GetCityPostsResponse>(response, HttpStatus.OK);
+    }
+
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
+    public ResponseEntity<GetCityPostsResponse> getCityPostsFeatured(GetCityPostsRequest request) {
+        Pageable pageConfig = PageRequest.of(request.getPage(), request.getSize());
+        List<IBasicPost> posts = postRepository.findAllByCityIdOrderByFeaturedPopularityDesc(request.getCityId(), pageConfig);
+        List<UserLikePost> userLikePosts = updatePostAttribute(posts, request.getUserId());
+        GetCityPostsResponse response = new GetCityPostsResponse(InternalStatus.OK, userLikePosts);
+        return new ResponseEntity<GetCityPostsResponse>(response, HttpStatus.OK);
+    }
+
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
+    public ResponseEntity<GetCityPostsResponse> getCityPostsTop(GetCityPostsRequest request) {
+        Pageable pageConfig = PageRequest.of(request.getPage(), request.getSize());
+        List<IBasicPost> posts = postRepository.findAllByCityIdOrderByTopPopularityDesc(request.getCityId(), pageConfig);
         List<UserLikePost> userLikePosts = updatePostAttribute(posts, request.getUserId());
         GetCityPostsResponse response = new GetCityPostsResponse(InternalStatus.OK, userLikePosts);
         return new ResponseEntity<GetCityPostsResponse>(response, HttpStatus.OK);

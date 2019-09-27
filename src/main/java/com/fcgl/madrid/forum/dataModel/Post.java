@@ -25,11 +25,11 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
-    @Size(min = 3, max = 40)
+    @Size(min = 3, max = 60)
     private String title;
     private String description;
-    private long createdDate;
-    private long updatedDate;
+    private Long createdDate;
+    private Long updatedDate;
     @NotNull
     private Integer cityId;//TODO: Think about location better than this
     @NotNull
@@ -37,6 +37,8 @@ public class Post {
     private Integer userLikeCount;
     private Integer userCommentCount;
     private String userFirstName;
+    private Long featuredPopularity;
+    private Long topPopularity;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     @JsonManagedReference
@@ -49,6 +51,10 @@ public class Post {
     @PreUpdate
     public void preUpdate() {
         this.updatedDate = Instant.now().toEpochMilli();
+        this.featuredPopularity = (long) (this.userLikeCount + this.userCommentCount * 3);
+        long secondsSincePost = (this.updatedDate - this.createdDate) / 1000;
+        long daysSincePost = ((((secondsSincePost) / 60) / 60) / 24);
+        this.topPopularity = this.featuredPopularity - daysSincePost;
     }
 
     public Post() {
@@ -66,6 +72,8 @@ public class Post {
         this.userLikes = new ArrayList<UserLike>();
         this.userLikeCount = 0;
         this.userCommentCount = 0;
+        this.featuredPopularity = 0L;
+        this.topPopularity = 0L;
     }
 
     public Long getId() {
@@ -88,15 +96,15 @@ public class Post {
         this.description = description;
     }
 
-    public long getCreatedDate() {
+    public Long getCreatedDate() {
         return createdDate;
     }
 
-    public long getUpdatedDate() {
+    public Long getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(long updatedDate) {
+    public void setUpdatedDate(Long updatedDate) {
         this.updatedDate = updatedDate;
     }
 
@@ -142,5 +150,21 @@ public class Post {
 
     public void setUserFirstName(String userFirstName) {
         this.userFirstName = userFirstName;
+    }
+
+    public Long getTopPopularity() {
+        return topPopularity;
+    }
+
+    public void setTopPopularity(Long topPopularity) {
+        this.topPopularity = topPopularity;
+    }
+
+    public Long getFeaturedPopularity() {
+        return featuredPopularity;
+    }
+
+    public void setFeaturedPopularity(Long featuredPopularity) {
+        this.featuredPopularity = featuredPopularity;
     }
 }

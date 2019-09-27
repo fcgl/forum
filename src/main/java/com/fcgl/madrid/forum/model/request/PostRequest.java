@@ -1,11 +1,20 @@
 package com.fcgl.madrid.forum.model.request;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class PostRequest {
 
+    @NotEmpty
+    @Size(min = 3, max = 60)
     private String title;
     private String description;
+    @NotNull
     private Integer cityId;
+    @NotNull
     private Long userId;
+    @NotNull
     private String userFirstName;
 
     /**

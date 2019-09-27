@@ -11,7 +11,7 @@ public class CommentRequest {
     @NotNull
     private Long userId;
     @NotNull
-    private Post post;
+    private Long postId;
     @NotEmpty
     private String firstName;
 
@@ -19,13 +19,13 @@ public class CommentRequest {
      * Request Parameters for post
      * @param message
      * @param userId
-     * @param post
+     * @param postId
      * @param firstName
      */
-    public CommentRequest(String message, Long userId, Post post, String firstName){
+    public CommentRequest(String message, Long userId, Long postId, String firstName){
         this.message = message;
         this.userId = userId;
-        this.post = post;
+        this.postId = postId;
         this.firstName = firstName;
     }
 
@@ -37,12 +37,12 @@ public class CommentRequest {
         this.userId = userId;
     }
 
-    public Post getPost() {
-        return post;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setPost(Post post) {
-        this.post = post;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public String getMessage() {
