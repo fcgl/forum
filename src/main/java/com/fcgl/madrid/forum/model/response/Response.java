@@ -1,12 +1,16 @@
 package com.fcgl.madrid.forum.model.response;
 
+import java.time.Instant;
+
 public class Response<T> {
     private T response;
     private InternalStatus status;
+    private Long timestamp;
 
     public Response(InternalStatus status, T response) {
         this.status = status;
         this.response = response;
+        this.timestamp = Instant.now().toEpochMilli();
     }
 
     public T getResponse() {
@@ -23,5 +27,13 @@ public class Response<T> {
 
     public void setStatus(InternalStatus status) {
         this.status = status;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 }

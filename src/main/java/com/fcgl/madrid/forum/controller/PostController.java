@@ -3,10 +3,7 @@ package com.fcgl.madrid.forum.controller;
 import com.fcgl.madrid.forum.dataModel.Post;
 import com.fcgl.madrid.forum.model.request.GetCityPostsRequest;
 import com.fcgl.madrid.forum.model.request.PostLikeRequest;
-import com.fcgl.madrid.forum.model.response.GetCityPostsResponse;
-import com.fcgl.madrid.forum.model.response.GetPostInteractionData;
-import com.fcgl.madrid.forum.model.response.GetPostResponse;
-import com.fcgl.madrid.forum.model.response.InternalStatus;
+import com.fcgl.madrid.forum.model.response.*;
 import com.fcgl.madrid.forum.model.request.PostRequest;
 import com.fcgl.madrid.forum.service.PostService;
 import com.fcgl.madrid.healthcheck.model.Health;
@@ -48,7 +45,7 @@ public class PostController {
     }
 
     @PostMapping(path= "/post")
-    public ResponseEntity<InternalStatus> post(@Valid @RequestBody PostRequest postRequest) {
+    public ResponseEntity<Response<Post>> post(@Valid @RequestBody PostRequest postRequest) {
         return postService.post(postRequest);
     }
 

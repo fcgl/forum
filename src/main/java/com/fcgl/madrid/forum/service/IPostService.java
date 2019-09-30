@@ -1,7 +1,9 @@
 package com.fcgl.madrid.forum.service;
 
+import com.fcgl.madrid.forum.dataModel.Post;
 import com.fcgl.madrid.forum.model.response.InternalStatus;
 import com.fcgl.madrid.forum.model.request.PostRequest;
+import com.fcgl.madrid.forum.model.response.Response;
 import org.springframework.http.ResponseEntity;
 
 public interface IPostService {
@@ -11,5 +13,5 @@ public interface IPostService {
      * @param postRequest Request made by client
      * @return ResponseEntity<InternalStatus>
      */
-    public ResponseEntity<InternalStatus> post(PostRequest postRequest);
+    public ResponseEntity<Response<Post>> post(PostRequest postRequest);
 }
