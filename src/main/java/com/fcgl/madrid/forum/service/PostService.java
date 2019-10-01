@@ -24,13 +24,10 @@ import org.springframework.transaction.TransactionSystemException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.Optional;
 
 
 import java.lang.Exception;
-import java.lang.Throwable;
-import java.lang.StringBuilder;
 
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -60,21 +57,16 @@ public class PostService implements IPostService {
     }
 
     @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
-    public ResponseEntity<InternalStatus> post(PostRequest postRequest) {
-        try {
-            Post post = new Post(
-                    postRequest.getTitle(),
-                    postRequest.getDescription(),
-                    postRequest.getCityId(),
-                    postRequest.getUserId(),
-                    postRequest.getUserFirstName()
-            );
-            postRepository.save(post);
-            return new ResponseEntity<InternalStatus>(InternalStatus.OK, HttpStatus.OK);
-        }
-        catch (TransactionSystemException e) {
-            return handleParamException(e);
-        }
+    public ResponseEntity<Response<Post>> post(PostRequest postRequest) {
+        Post post = new Post(
+                postRequest.getTitle(),
+                postRequest.getDescription(),
+                postRequest.getCityId(),
+                postRequest.getUserId(),
+                postRequest.getUserFirstName()
+        );
+        postRepository.save(post);
+        return new ResponseEntity<>(new Response<Post>(InternalStatus.OK, post), HttpStatus.OK);
     }
 
     @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
@@ -188,12 +180,12 @@ public class PostService implements IPostService {
     /**
      *
      * @param ex Exception
-     * @return ResponseEntity<InternalStatus>
+     * @return ResponseEntity<Response>
      */
-    private ResponseEntity<InternalStatus> fallback(PostRequest postRequest, Exception ex) {
+    private ResponseEntity<Response<Post>> fallback(PostRequest postRequest, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
         InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, HttpStatus.INTERNAL_SERVER_ERROR, message);
-        return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<Response<Post>>(new Response<Post>(internalStatus,null), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
