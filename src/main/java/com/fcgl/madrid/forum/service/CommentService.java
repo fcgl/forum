@@ -6,6 +6,7 @@ import com.fcgl.madrid.forum.model.request.CommentRequest;
 import com.fcgl.madrid.forum.model.request.GetPostCommentRequest;
 import com.fcgl.madrid.forum.model.response.GetPostCommentResponse;
 import com.fcgl.madrid.forum.model.response.InternalStatus;
+import com.fcgl.madrid.forum.model.response.Response;
 import com.fcgl.madrid.forum.model.response.StatusCode;
 import com.fcgl.madrid.forum.repository.CommentRepository;
 import com.fcgl.madrid.forum.repository.PostRepository;
@@ -46,22 +47,17 @@ public class CommentService implements ICommentService {
     }
 
     @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
-    public ResponseEntity<InternalStatus> postComment(CommentRequest commentRequest) {
-        try {
-            Post post = postRepository.findById(commentRequest.getPostId()).get();
-            Comment comment = new Comment(
-                    commentRequest.getMessage(),
-                    post,
-                    commentRequest.getUserId(),
-                    commentRequest.getFirstname()
-            );
-            commentRepository.save(comment);
-        }
-        catch (TransactionSystemException e) {
-            return handleParamException(e);
-        }
-
-        return new ResponseEntity<InternalStatus>(InternalStatus.OK, HttpStatus.OK);
+    public ResponseEntity<Response<Comment>> postComment(CommentRequest commentRequest) {
+        Post post = postRepository.findById(commentRequest.getPostId()).get();
+        Comment comment = new Comment(
+                commentRequest.getMessage(),
+                post,
+                commentRequest.getUserId(),
+                commentRequest.getFirstname()
+        );
+        commentRepository.save(comment);
+        Response<Comment> response = new Response<>(InternalStatus.OK, comment);
+        return new ResponseEntity<Response<Comment>>(response, HttpStatus.OK);
     }
 
     @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
@@ -106,10 +102,11 @@ public class CommentService implements ICommentService {
      * @param ex Exception
      * @return ResponseEntity<InternalStatus>
      */
-    private ResponseEntity<InternalStatus> fallback(CommentRequest commentRequest, Exception ex) {
+    private ResponseEntity<Response<Comment>> fallback(CommentRequest commentRequest, Exception ex) {
         String message = "Fallback: " + ex.getMessage();
         InternalStatus internalStatus = new InternalStatus(StatusCode.UNKNOWN, HttpStatus.INTERNAL_SERVER_ERROR, message);
-        return new ResponseEntity<InternalStatus>(internalStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+        Response<Comment> response = new Response<Comment>(internalStatus, null);
+        return new ResponseEntity<Response<Comment>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
